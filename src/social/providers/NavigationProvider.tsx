@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState, useMemo, ReactNode } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, MessageDescriptor } from 'react-intl';
 import { useConfirmContext } from '~/core/providers/ConfirmProvider';
 
 import { PageTypes } from '~/social/constants';
@@ -72,9 +72,9 @@ type ContextValue = {
   setNavigationBlocker?: (
     params:
       | {
-          title: ReactNode;
-          content: ReactNode;
-          okText: ReactNode;
+          title: MessageDescriptor;
+          content: MessageDescriptor;
+          okText: MessageDescriptor;
         }
       | null
       | undefined,
@@ -101,10 +101,14 @@ let defaultValue: ContextValue = {
   goToDraftStoryPage: (targetId: string) => {},
 };
 
-export const defaultNavigationBlocker = {
-  title: () => <FormattedMessage id="navigationBlocker.title" />,
-  content: () => <FormattedMessage id="navigationBlocker.content" />,
-  okText: () => <FormattedMessage id="navigationBlocker.okText" />,
+export const defaultNavigationBlocker: {
+  title: MessageDescriptor;
+  content: MessageDescriptor;
+  okText: MessageDescriptor;
+} = {
+  title: { id: "navigationBlocker.title" },
+  content: { id: "navigationBlocker.content" },
+  okText: { id: "navigationBlocker.okText" },
 };
 
 if (process.env.NODE_ENV !== 'production') {
@@ -179,9 +183,9 @@ export default function NavigationProvider({
   const currentPage = useMemo(() => pages[pages.length - 1], [pages]);
   const [navigationBlocker, setNavigationBlocker] = useState<
     | {
-        title: ReactNode;
-        content: ReactNode;
-        okText: ReactNode;
+        title: MessageDescriptor;
+        content: MessageDescriptor;
+        okText: MessageDescriptor;
       }
     | null
     | undefined
@@ -193,10 +197,11 @@ export default function NavigationProvider({
 
   const confirmPageChange = useCallback(async () => {
     if (navigationBlocker) {
-      // for more info about this, see https://ekoapp.atlassian.net/browse/UP-3462?focusedCommentId=77155
       return new Promise((resolve) => {
         confirmation({
-          ...navigationBlocker,
+          title: navigationBlocker.title,
+          content: navigationBlocker.content,
+          okText: navigationBlocker.okText,
           onSuccess: () => {
             setNavigationBlocker?.(undefined);
             resolve(true);
@@ -232,13 +237,9 @@ export default function NavigationProvider({
 
   const handleChangePage = useCallback(
     (type) => {
-      // if (onChangePageProp) return onChangePage(type);
       pushPage({ type });
     },
-    [
-      // onChangePageProp,
-      pushPage,
-    ],
+    [pushPage],
   );
 
   const handleClickCommunity = useCallback(
@@ -342,8 +343,6 @@ export default function NavigationProvider({
 
       if (onChangePage) return onChangePage(next);
       if (onMessageUser) return onMessageUser(userId);
-
-      // pushPage(next);
     },
     [onChangePage, onMessageUser],
   );
@@ -353,7 +352,7 @@ export default function NavigationProvider({
       onBack();
     }
     popPage();
-  }, [onChangePage, onBack, popPage]);
+  }, [onBack]);
 
   const handleClickStory = useCallback(
     (targetId, storyType, targetIds) => {
