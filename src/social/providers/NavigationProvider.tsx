@@ -102,9 +102,9 @@ let defaultValue: ContextValue = {
 };
 
 export const defaultNavigationBlocker = {
-  title: <FormattedMessage id="navigationBlocker.title" />,
-  content: <FormattedMessage id="navigationBlocker.content" />,
-  okText: <FormattedMessage id="navigationBlocker.okText" />,
+  title: () => <FormattedMessage id="navigationBlocker.title" />,
+  content: () => <FormattedMessage id="navigationBlocker.content" />,
+  okText: () => <FormattedMessage id="navigationBlocker.okText" />,
 };
 
 if (process.env.NODE_ENV !== 'production') {
