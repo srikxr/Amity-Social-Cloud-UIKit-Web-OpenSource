@@ -5,12 +5,11 @@ import pkg from './package.json';
 export default defineConfig((options) => ({
   entry: ['src/index.ts'],
   format: ['cjs', 'esm'],
-  dts: false,
+  dts: true,
   sourcemap: options.sourcemap,
   minify: options.minify,
   clean: true,
   splitting: true,
-  ignoreErrors: true,
   treeshake: true,
   metafile: true,
   legacyOutput: true,
