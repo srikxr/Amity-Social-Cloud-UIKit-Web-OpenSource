@@ -143,6 +143,7 @@
     "react-tiny-popover": "^7.2.4",
     "react-truncate-markup": "^5.1.2",
     "react-use": "^17.4.2",
+    "scheduler": "^0.23.2",
     "stylis": "^4.3.1",
     "uuid": "^8.3.2",
     "vaul": "^0.9.1",
